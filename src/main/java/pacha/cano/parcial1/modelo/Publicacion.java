@@ -2,6 +2,7 @@ package pacha.cano.parcial1.modelo;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Time;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,6 +30,9 @@ public class Publicacion implements Serializable {
 	@Column(columnDefinition = "DATE", nullable = false)
 	private Date fechaPublicacion;
 	
+	@Column(columnDefinition = "TIME", nullable = false)
+	private Time horaPublicacion;
+
 	@Column(nullable = false)
 	private long cantidadLikes;
 
@@ -70,6 +74,20 @@ public class Publicacion implements Serializable {
 
 	public void setCantidadLikes(long cantidadLikes) {
 		this.cantidadLikes = cantidadLikes;
+	}
+
+	public Time getHoraPublicacion() {
+		return horaPublicacion;
+	}
+
+	public void setHoraPublicacion(Time horaPublicacion) {
+		this.horaPublicacion = horaPublicacion;
+	}
+	
+	@Override
+	public String toString() {
+		return "Publicacion [id=" + id + ", titulo=" + titulo + ", descripcion=" + descripcion + ", fechaPublicacion="
+				+ fechaPublicacion + ", cantidadLikes=" + cantidadLikes + "]";
 	}
 
 	

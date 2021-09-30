@@ -132,6 +132,31 @@ public class ApiRestController {
 		}
 	}
 	
+	@GetMapping(value = "/publicacionDePerfil")
+	public ResponseEntity<Publicacion> publicacionDeUnPerfil (@RequestParam("nombre") String nombre) {
+		try {
+			return new ResponseEntity<Publicacion>(perfilNegocio.publicacionDeUnPerfil(nombre), HttpStatus.OK);
+		} catch (NegocioException e) {
+			return new ResponseEntity<Publicacion>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NoEncontradoException e) {
+			return new ResponseEntity<Publicacion>(HttpStatus.NOT_FOUND); //Ver por qué no muestra el mensaje e
+		}
+	}
+	
+	@PutMapping(value="/asignacion")
+	public ResponseEntity<String> asignarPublicacion (@RequestParam ("idPerfil") Long idPerfil, @RequestParam("idPublicacion") Long idPublicacion) {
+		try {
+			perfilNegocio.asignarPublicacion(idPerfil, idPublicacion);
+			return new ResponseEntity<String>(HttpStatus.OK);
+		} catch (NegocioException e) {
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NoEncontradoException e) {
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		} catch (PublicacionAsignadaException e) {
+			return new ResponseEntity<String>("Este perfil ya tiene una publicación asignada", HttpStatus.CONFLICT);
+		}
+	}
+	
 	
 	
 	
@@ -206,6 +231,17 @@ public class ApiRestController {
 			return new ResponseEntity<Publicacion>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (NoEncontradoException e) {
 			return new ResponseEntity<Publicacion>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@GetMapping(value = "/publicacionesAyerEnUnaHora")
+	public ResponseEntity<List<Publicacion>> listadoPublicaciosAyerEnUnaHora (@RequestParam ("hora") int hora) {
+		try {
+			return new ResponseEntity<List<Publicacion>>(publicacionNegocio.publicacionesEnUnaHora(hora), HttpStatus.OK);
+		} catch (NegocioException e) {
+			return new ResponseEntity<List<Publicacion>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NoEncontradoException e) {
+			return new ResponseEntity<List<Publicacion>>(HttpStatus.NOT_FOUND);
 		}
 	}
 }

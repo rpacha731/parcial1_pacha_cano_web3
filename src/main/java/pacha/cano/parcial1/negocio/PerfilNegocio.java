@@ -6,21 +6,30 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pacha.cano.parcial1.modelo.Perfil;
+import pacha.cano.parcial1.modelo.Publicacion;
 import pacha.cano.parcial1.modelo.persistencia.PerfilRepository;
+import pacha.cano.parcial1.modelo.persistencia.PublicacionRepository;
 import pacha.cano.parcial1.negocio.exceptions.DuplicadoException;
 import pacha.cano.parcial1.negocio.exceptions.EncontradoException;
 import pacha.cano.parcial1.negocio.exceptions.NegocioException;
 import pacha.cano.parcial1.negocio.exceptions.NoEncontradoException;
+import pacha.cano.parcial1.negocio.exceptions.PublicacionAsignadaException;
 
 @Service
 public class PerfilNegocio implements IPerfilNegocio {
 	
+	private Logger log = LoggerFactory.getLogger(PerfilNegocio.class);
+	
 	@Autowired
 	private PerfilRepository perfilDAO;
+	@Autowired
+	private PublicacionRepository publicacionDAO;
 
 	@Override
 	public List<Perfil> listado() throws NegocioException {
@@ -147,4 +156,66 @@ public class PerfilNegocio implements IPerfilNegocio {
 		}
 	}
 
+	@Override
+	public Publicacion publicacionDeUnPerfil(String nombre) throws NegocioException, NoEncontradoException {
+		Optional<Perfil> aux = null;
+		try {
+			aux = perfilDAO.findByNombreUsuario(nombre);
+		} catch (Exception e) {
+			throw new NegocioException (e);
+		}
+		if (!aux.isPresent()) {
+			throw new NoEncontradoException("No hay ningún usuario con el nombre de usuario '" + nombre +"'");
+		}
+		
+		if (aux.get().getPublicacion() == null) {
+			throw new NoEncontradoException("Este usuario no tiene ninguna publicación");
+		}
+		return aux.get().getPublicacion();
+	}
+	
+	@Override
+	public Publicacion likeSuperaSeguidores (long id) throws NegocioException, NoEncontradoException{
+		Optional<Perfil> aux = null;
+		try {
+			aux = perfilDAO.findById(id);
+		} catch (Exception e) {
+			throw new NegocioException (e);
+		}
+		if (!aux.isPresent()) {
+			throw new NoEncontradoException("No hay ningún usuario con el nombre de usuario '" + id+"'");
+		}
+		
+		if (aux.get().getPublicacion() == null) {
+			throw new NoEncontradoException("Este usuario no tiene ninguna publicación");
+		}
+		return aux.get().getPublicacion();
+	}
+	
+	@Override
+	public void asignarPublicacion(Long idPerfil, Long idPublicacion) throws PublicacionAsignadaException, NoEncontradoException, NegocioException {
+		Optional <Perfil> temp = perfilDAO.findById(idPerfil); 
+		Optional <Publicacion> temp2 = publicacionDAO.findById(idPublicacion);
+				
+		if (!temp.isPresent()) {
+			throw new NoEncontradoException("No existe un perfil con id = " + idPerfil);
+		}
+		
+		if (!temp2.isPresent()) {
+			throw new NoEncontradoException("No existe una publicación con id = " + idPublicacion);
+		}
+		
+
+		if (temp.get().getPublicacion() != null) {
+			
+			throw new PublicacionAsignadaException("Este perfil ya tiene una publicación asignada");
+		}
+		
+		try {
+			(temp.get()).setPublicacion(temp2.get());
+			perfilDAO.save(temp.get());
+		} catch (Exception e) {
+			throw new NegocioException(e);
+		}
+	}
 }

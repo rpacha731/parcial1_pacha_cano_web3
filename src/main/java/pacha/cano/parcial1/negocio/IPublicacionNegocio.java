@@ -2,6 +2,7 @@ package pacha.cano.parcial1.negocio;
 
 import java.util.List;
 
+import pacha.cano.parcial1.modelo.Perfil;
 import pacha.cano.parcial1.modelo.Publicacion;
 import pacha.cano.parcial1.negocio.exceptions.*;
 
@@ -18,4 +19,7 @@ public interface IPublicacionNegocio {
 	public Publicacion cargar (long id) throws NegocioException, NoEncontradoException; //ta
 	
 	public Publicacion publicacionMasLikes () throws NegocioException, NoEncontradoException;
+	
+	public List<Publicacion> publicacionesEnUnaHora (int hora) throws NegocioException, NoEncontradoException;
+	
 }

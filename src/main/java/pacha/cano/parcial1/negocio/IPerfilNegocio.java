@@ -3,6 +3,7 @@ package pacha.cano.parcial1.negocio;
 import java.util.List;
 
 import pacha.cano.parcial1.modelo.Perfil;
+import pacha.cano.parcial1.modelo.Publicacion;
 import pacha.cano.parcial1.negocio.exceptions.*;
 
 public interface IPerfilNegocio {
@@ -24,4 +25,11 @@ public interface IPerfilNegocio {
 	public Perfil tituloPublicacionDesdePerfil (String tituloPublicacion) throws NegocioException, NoEncontradoException;
 	
 	public List<Perfil> perfilesDesdeDireccion (String direccion) throws NegocioException, NoEncontradoException;
+	
+	public Publicacion publicacionDeUnPerfil(String nombre) throws NegocioException, NoEncontradoException;
+	
+	public Publicacion likeSuperaSeguidores (long id) throws NegocioException, NoEncontradoException;
+
+	public void asignarPublicacion(Long idPerfil, Long idPublicacion) throws NegocioException, NoEncontradoException, PublicacionAsignadaException;
+
 }
