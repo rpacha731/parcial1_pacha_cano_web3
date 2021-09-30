@@ -1,5 +1,8 @@
 package pacha.cano.parcial1.negocio;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,6 +104,19 @@ public class PerfilNegocio implements IPerfilNegocio {
 			throw new NoEncontradoException("No hay ningun perfil con más seguidores");
 		}
 		return aux.get();
+	}
+
+	@Override
+	public List<Perfil> perfilesMesYAnioNacimiento(int mes, int anio) throws NegocioException {
+
+		Date fechaInicio = Date.valueOf(LocalDate.of(anio, mes, 1));
+		Date fechaFin = Date.valueOf(LocalDate.of(anio, mes, YearMonth.of(anio, mes).lengthOfMonth()));
+				
+		try {
+			return perfilDAO.findAllByFechaNacimientoBetween(fechaInicio, fechaFin);
+		} catch (Exception e) {
+			throw new NegocioException(e);
+		}
 	}
 
 }

@@ -18,4 +18,6 @@ public interface IPerfilNegocio {
 	public Perfil cargar (long id) throws NegocioException, NoEncontradoException; //ta
 	
 	public Perfil perfilMasSeguidores () throws NegocioException, NoEncontradoException;
+	
+	public List<Perfil> perfilesMesYAnioNacimiento (int mes, int anio) throws NegocioException;
 }

@@ -12,12 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import pacha.cano.parcial1.modelo.Perfil;
-import pacha.cano.parcial1.modelo.Publicacion;
-import pacha.cano.parcial1.negocio.IPerfilNegocio;
-import pacha.cano.parcial1.negocio.IPublicacionNegocio;
+import pacha.cano.parcial1.modelo.*;
+import pacha.cano.parcial1.negocio.*;
 import pacha.cano.parcial1.negocio.exceptions.*;
 
 @RestController
@@ -29,7 +28,7 @@ public class ApiRestController {
 	@Autowired
 	private IPublicacionNegocio publicacionNegocio;
 	
-	@GetMapping(value = "/perfil")
+	@GetMapping(value = "/perfiles")
 	public ResponseEntity<List<Perfil>> listadoPerfiles () {
 		try {
 			return new ResponseEntity<List<Perfil>>(perfilNegocio.listado(), HttpStatus.OK);
@@ -38,7 +37,18 @@ public class ApiRestController {
 		}
 	}
 	
-	@PostMapping(value="/perfil")
+	@GetMapping(value="/perfiles/{id}")
+	public ResponseEntity<Perfil> cargarPerfil(@PathVariable("id") long id) {
+		try {
+			return new ResponseEntity<Perfil>(perfilNegocio.cargar(id), HttpStatus.OK);
+		} catch (NegocioException e) {
+			return new ResponseEntity<Perfil>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NoEncontradoException e) {
+			return new ResponseEntity<Perfil>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PostMapping(value="/perfiles")
 	public ResponseEntity<String> agregarPerfil(@RequestBody Perfil perfil) {
 		try {
 			Perfil respuesta = perfilNegocio.agregar(perfil);
@@ -54,7 +64,7 @@ public class ApiRestController {
 		}
 	}
 	
-	@PutMapping(value="/perfil")
+	@PutMapping(value="/perfiles")
 	public ResponseEntity<String> modificarPerfil(@RequestBody Perfil perfil) {
 		try {
 			perfilNegocio.modificar(perfil);
@@ -68,7 +78,7 @@ public class ApiRestController {
 		}
 	}
 	
-	@DeleteMapping(value="/perfil/{id}")
+	@DeleteMapping(value="/perfiles/{id}")
 	public ResponseEntity<String> eliminarPerfil(@PathVariable("id") long id) {
 		try {
 			perfilNegocio.eliminar(id);
@@ -91,6 +101,14 @@ public class ApiRestController {
 		}
 	}
 	
+	@GetMapping(value = "/perfilesNaciMesAnio")
+	public ResponseEntity<List<Perfil>> listadoPerfilesNacimientoMesAnio (@RequestParam("mes") int mes, @RequestParam("anio") int anio) {
+		try {
+			return new ResponseEntity<List<Perfil>>(perfilNegocio.perfilesMesYAnioNacimiento(mes, anio), HttpStatus.OK);
+		} catch (NegocioException e) {
+			return new ResponseEntity<List<Perfil>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 	
 	
 	
@@ -100,7 +118,8 @@ public class ApiRestController {
 	
 	
 	
-	@GetMapping(value = "/publicacion")
+	
+	@GetMapping(value = "/publicaciones")
 	public ResponseEntity<List<Publicacion>> listadoPublicaciones () {
 		try {
 			return new ResponseEntity<List<Publicacion>>(publicacionNegocio.listado(), HttpStatus.OK);
@@ -109,7 +128,18 @@ public class ApiRestController {
 		}
 	}
 	
-	@PostMapping(value="/publicacion")
+	@GetMapping(value="/publicaciones/{id}")
+	public ResponseEntity<Publicacion> cargarPublicacion(@PathVariable("id") long id) {
+		try {
+			return new ResponseEntity<Publicacion>(publicacionNegocio.cargar(id), HttpStatus.OK);
+		} catch (NegocioException e) {
+			return new ResponseEntity<Publicacion>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NoEncontradoException e) {
+			return new ResponseEntity<Publicacion>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PostMapping(value="/publicaciones")
 	public ResponseEntity<String> agregarPublicacion(@RequestBody Publicacion publicacion) {
 		try {
 			Publicacion respuesta = publicacionNegocio.agregar(publicacion);
@@ -123,7 +153,7 @@ public class ApiRestController {
 		} 
 	}
 	
-	@PutMapping(value="/publicacion")
+	@PutMapping(value="/publicaciones")
 	public ResponseEntity<String> modificarPublicacion(@RequestBody Publicacion publicacion) {
 		try {
 			publicacionNegocio.modificar(publicacion);
@@ -135,7 +165,7 @@ public class ApiRestController {
 		}
 	}
 	
-	@DeleteMapping(value="/publicacion/{id}")
+	@DeleteMapping(value="/publicaciones/{id}")
 	public ResponseEntity<String> eliminarPublicacion(@PathVariable("id") long id) {
 		try {
 			publicacionNegocio.eliminar(id);
