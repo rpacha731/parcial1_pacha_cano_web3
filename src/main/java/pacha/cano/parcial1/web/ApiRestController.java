@@ -110,6 +110,27 @@ public class ApiRestController {
 		}
 	}
 	
+	@GetMapping(value = "/tituloPublicacionDesdePerfil")
+	public ResponseEntity<Perfil> tituloPublicacionDesdePerfil (@RequestParam("tituloPublicacion") String tituloPublicacion) {
+		try {
+			return new ResponseEntity<Perfil>(perfilNegocio.tituloPublicacionDesdePerfil(tituloPublicacion), HttpStatus.OK);
+		} catch (NegocioException e) {
+			return new ResponseEntity<Perfil>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NoEncontradoException e) {
+			return new ResponseEntity<Perfil>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@GetMapping(value = "/perfilesDesdeDireccion")
+	public ResponseEntity<List<Perfil>> perfilesDesdeDireccion (@RequestParam("direccion") String direccion) {
+		try {
+			return new ResponseEntity<List<Perfil>>(perfilNegocio.perfilesDesdeDireccion(direccion), HttpStatus.OK);
+		} catch (NegocioException e) {
+			return new ResponseEntity<List<Perfil>>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NoEncontradoException e) {
+			return new ResponseEntity<List<Perfil>>(HttpStatus.NOT_FOUND);
+		}
+	}
 	
 	
 	

@@ -119,4 +119,32 @@ public class PerfilNegocio implements IPerfilNegocio {
 		}
 	}
 
+	@Override
+	public Perfil tituloPublicacionDesdePerfil(String tituloPublicacion)
+			throws NegocioException, NoEncontradoException {
+		Optional<Perfil> aux = null;
+		try {
+			aux = perfilDAO.findByPublicacionTitulo(tituloPublicacion);
+		} catch (Exception e) {
+			throw new NegocioException (e);
+		}
+		if (!aux.isPresent()) {
+			throw new NoEncontradoException("No hay ninguna publicación con el titulo = " + tituloPublicacion);
+		}
+		return aux.get();
+	}
+
+	@Override
+	public List<Perfil> perfilesDesdeDireccion(String direccion) throws NegocioException, NoEncontradoException {
+		
+		try {
+			List <Perfil> aux = perfilDAO.findAllByDireccion(direccion);
+			if (aux.isEmpty())
+				throw new NoEncontradoException("No hay ningun perfil con la direccion = " + direccion);
+			return aux;
+		} catch (Exception e) {
+			throw new NegocioException(e);
+		}
+	}
+
 }

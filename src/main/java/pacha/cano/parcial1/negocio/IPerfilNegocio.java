@@ -20,4 +20,8 @@ public interface IPerfilNegocio {
 	public Perfil perfilMasSeguidores () throws NegocioException, NoEncontradoException;
 	
 	public List<Perfil> perfilesMesYAnioNacimiento (int mes, int anio) throws NegocioException;
+	
+	public Perfil tituloPublicacionDesdePerfil (String tituloPublicacion) throws NegocioException, NoEncontradoException;
+	
+	public List<Perfil> perfilesDesdeDireccion (String direccion) throws NegocioException, NoEncontradoException;
 }

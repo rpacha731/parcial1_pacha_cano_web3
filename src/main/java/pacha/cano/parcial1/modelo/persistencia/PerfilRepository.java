@@ -18,4 +18,7 @@ public interface PerfilRepository extends JpaRepository<Perfil, Long> {
 	
 	List<Perfil> findAllByFechaNacimientoBetween (Date fechaInicio, Date fechaFin); // fechaInicio y fechaFin es una fecha creada a 
 																					//	partir del mes y el año traidos desde la web
+	Optional<Perfil> findByPublicacionTitulo (String tituloPublicacion);
+	
+	List<Perfil> findAllByDireccion (String direccion);
 }
