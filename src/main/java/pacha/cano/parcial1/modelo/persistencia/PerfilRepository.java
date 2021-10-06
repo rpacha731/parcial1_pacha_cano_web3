@@ -22,4 +22,6 @@ public interface PerfilRepository extends JpaRepository<Perfil, Long> {
 	
 	List<Perfil> findAllByDireccion (String direccion);
 	
+	List<Perfil> findAllByPublicacionIsNotNull ();
+	
 }

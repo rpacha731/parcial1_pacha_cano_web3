@@ -3,6 +3,7 @@ package pacha.cano.parcial1.negocio;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -174,23 +175,6 @@ public class PerfilNegocio implements IPerfilNegocio {
 		return aux.get().getPublicacion();
 	}
 	
-	@Override
-	public Publicacion likeSuperaSeguidores (long id) throws NegocioException, NoEncontradoException{
-		Optional<Perfil> aux = null;
-		try {
-			aux = perfilDAO.findById(id);
-		} catch (Exception e) {
-			throw new NegocioException (e);
-		}
-		if (!aux.isPresent()) {
-			throw new NoEncontradoException("No hay ningún usuario con el nombre de usuario '" + id+"'");
-		}
-		
-		if (aux.get().getPublicacion() == null) {
-			throw new NoEncontradoException("Este usuario no tiene ninguna publicación");
-		}
-		return aux.get().getPublicacion();
-	}
 	
 	@Override
 	public void asignarPublicacion(Long idPerfil, Long idPublicacion) throws PublicacionAsignadaException, NoEncontradoException, NegocioException {
@@ -217,5 +201,40 @@ public class PerfilNegocio implements IPerfilNegocio {
 		} catch (Exception e) {
 			throw new NegocioException(e);
 		}
+	}
+
+	@Override
+	public Perfil publicacionMasLikesQueSeguidores() throws NegocioException, NoEncontradoException {
+		List<Perfil> list = null;
+		List<Perfil> aux = new ArrayList<Perfil>();
+		
+		long diferenciaMAX = 0;
+		Perfil perfilMAX = null;
+		
+		try {
+			list = perfilDAO.findAllByPublicacionIsNotNull();
+		} catch (Exception e) {
+			throw new NegocioException(e);
+		}
+		
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getCantidadSeguidores() < list.get(i).getPublicacion().getCantidadLikes()) {
+				aux.add(list.get(i));
+			}
+		}
+		
+		if (aux.isEmpty()) {throw new NoEncontradoException("No hay ningun perfil que su publicación tenga más likes que seguidores");}
+		
+		
+		for (int i = 0; i < aux.size(); i++) {
+
+			if (aux.get(i).getPublicacion().getCantidadLikes() - aux.get(i).getCantidadSeguidores() > diferenciaMAX) {
+				diferenciaMAX = aux.get(i).getPublicacion().getCantidadLikes() - aux.get(i).getCantidadSeguidores();
+				perfilMAX = aux.get(i);
+			}
+		}
+		
+		return perfilMAX;
+		
 	}
 }

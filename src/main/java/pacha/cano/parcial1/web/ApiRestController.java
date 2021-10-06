@@ -139,7 +139,7 @@ public class ApiRestController {
 		} catch (NegocioException e) {
 			return new ResponseEntity<Publicacion>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (NoEncontradoException e) {
-			return new ResponseEntity<Publicacion>(HttpStatus.NOT_FOUND); //Ver por qué no muestra el mensaje e
+			return new ResponseEntity<Publicacion>(HttpStatus.NOT_FOUND); 
 		}
 	}
 	
@@ -157,7 +157,16 @@ public class ApiRestController {
 		}
 	}
 	
-	
+	@GetMapping(value = "/publicacionMaxDiferencia")
+	public ResponseEntity<Perfil> publicacionMaxDiferencia () {
+		try {
+			return new ResponseEntity<Perfil>(perfilNegocio.publicacionMasLikesQueSeguidores(), HttpStatus.OK);
+		} catch (NegocioException e) {
+			return new ResponseEntity<Perfil>(HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (NoEncontradoException e) {
+			return new ResponseEntity<Perfil>(HttpStatus.NOT_FOUND); 
+		}
+	}
 	
 	
 	
